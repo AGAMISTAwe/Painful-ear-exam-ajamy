@@ -529,6 +529,35 @@
   }
   .callout b { color: var(--gold); }
 
+  /* ── MOBILE RESPONSIVENESS ──────────────────────────── */
+  @media (max-width: 768px) {
+    .cover { padding: 32px 20px 24px; min-height: auto; }
+    .cover h1 { font-size: 32px; }
+    .cover h2 { font-size: 18px; }
+    .cover-meta { gap: 12px; flex-direction: column; }
+    
+    .toc { padding: 16px 20px; flex-direction: column; gap: 12px; align-items: flex-start; }
+    .toc-item { padding: 4px 0; }
+    
+    .section-header { padding: 24px 20px 20px; flex-direction: column; align-items: flex-start; gap: 12px; }
+    .section-num { font-size: 48px; margin-right: 0; }
+    .section-text h2 { font-size: 24px; }
+    .section-badge { margin-left: 0; align-self: flex-start; }
+    
+    .content { padding: 24px 20px; }
+    
+    .mcq-options { grid-template-columns: 1fr; }
+    .mcq-header { flex-wrap: wrap; }
+    .mcq-tag { margin-left: 0; margin-top: 8px; }
+    
+    .osce-header { flex-wrap: wrap; }
+    .osce-disease-tag { margin-left: 0; margin-top: 8px; }
+    .osce-scenario::before { position: relative; top: 0; right: 0; display: block; margin-bottom: 12px; }
+    
+    .revision-grid { grid-template-columns: 1fr; }
+    .answer-key-grid { grid-template-columns: 1fr; }
+  }
+
   /* ── PRINT ──────────────────────────────────────────── */
   @media print {
     .section-header { page-break-before: always; }
