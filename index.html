@@ -1,13 +1,2070 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painful Ear — ENT Exam Bank</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
 
+  :root {
+    --navy: #0a1628;
+    --teal: #0d6e8a;
+    --teal-light: #1a8fad;
+    --gold: #c9a84c;
+    --gold-light: #f0c96e;
+    --cream: #faf8f3;
+    --red: #c0392b;
+    --green: #1a6b4a;
+    --section-bg: #f0ede6;
+    --border: #d4c9b0;
+    --text: #1a1a2e;
+    --muted: #5a5a7a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--cream);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ── COVER PAGE ─────────────────────────────────────── */
+  .cover {
+    background: var(--navy);
+    color: #fff;
+    min-height: 200px;
+    padding: 48px 64px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 20%, rgba(13,110,138,0.35) 0%, transparent 60%),
+                radial-gradient(ellipse at 10% 80%, rgba(201,168,76,0.2) 0%, transparent 50%);
+  }
+  .cover-inner { position: relative; z-index: 1; }
+  .cover-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .cover h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1.1;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .cover h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--teal-light);
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .cover-meta span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 1px;
+  }
+  .cover-meta b { color: var(--gold-light); }
+
+  /* ── TOC / DIVIDERS ─────────────────────────────────── */
+  .toc {
+    background: var(--section-bg);
+    border-bottom: 2px solid var(--border);
+    padding: 24px 64px;
+    display: flex;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 24px 8px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .toc-item:hover { color: var(--teal); }
+  .toc-num {
+    background: var(--navy);
+    color: var(--gold);
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* ── SECTION HEADER ─────────────────────────────────── */
+  .section-header {
+    background: var(--navy);
+    color: #fff;
+    padding: 28px 64px 24px;
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    page-break-before: always;
+  }
+  .section-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 72px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.08);
+    line-height: 1;
+    margin-right: 4px;
+  }
+  .section-text h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .section-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .section-badge {
+    margin-left: auto;
+    background: var(--teal);
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    align-self: center;
+  }
+
+  /* ── CONTENT AREA ───────────────────────────────────── */
+  .content {
+    padding: 40px 64px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── MCQ CARD ───────────────────────────────────────── */
+  .mcq-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    page-break-inside: avoid;
+  }
+  .mcq-header {
+    background: var(--navy);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .mcq-num {
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .mcq-q {
+    font-size: 13.5px;
+    color: #fff;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+  .mcq-tag {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--teal-light);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid rgba(26,143,173,0.3);
+    padding: 3px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+  .mcq-options {
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .mcq-opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid #e8e4d9;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--cream);
+  }
+  .mcq-opt:hover { border-color: var(--teal); background: rgba(13,110,138,0.04); }
+  .mcq-letter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--teal);
+    background: rgba(13,110,138,0.1);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .mcq-opt-text { font-size: 13px; line-height: 1.4; }
+  .mcq-footer {
+    padding: 8px 20px 12px;
+    border-top: 1px solid #f0ede6;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .answer-box {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .answer-blank {
+    display: inline-block;
+    width: 60px;
+    border-bottom: 2px solid var(--border);
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  /* ── OSCE STATION ───────────────────────────────────── */
+  .osce-station {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 32px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    page-break-inside: avoid;
+  }
+  .osce-header {
+    background: linear-gradient(135deg, var(--teal) 0%, #0a4a5e 100%);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .osce-badge {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .osce-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: #fff;
+    font-weight: 700;
+  }
+  .osce-disease-tag {
+    margin-left: auto;
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .osce-scenario {
+    padding: 20px 24px;
+    background: #f8f6f1;
+    border-bottom: 2px dashed var(--border);
+    position: relative;
+  }
+  .osce-scenario::before {
+    content: 'CLINICAL SCENARIO';
+    position: absolute;
+    top: 10px; right: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+  .osce-scenario p {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .osce-tasks {
+    padding: 20px 24px;
+  }
+  .tasks-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--teal);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0ede6;
+  }
+  .task-item:last-child { border-bottom: none; }
+  .task-num {
+    background: var(--navy);
+    color: var(--gold);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .task-text { font-size: 13.5px; line-height: 1.5; }
+  .answer-space {
+    margin-top: 6px;
+    height: 55px;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 24px,
+      #e8e4d9 24px,
+      #e8e4d9 25px
+    );
+    border-radius: 4px;
+  }
+
+  /* ── ANSWER KEY ─────────────────────────────────────── */
+  .answer-key-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .answer-key-item {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .ak-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    min-width: 30px;
+  }
+  .ak-ans {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--green);
+  }
+  .ak-text {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.3;
+  }
+
+  .osce-answer-block {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .oab-header {
+    background: var(--green);
+    color: #fff;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .oab-header h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+  }
+  .oab-body {
+    padding: 16px 20px;
+  }
+  .oab-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0ede6;
+    font-size: 13px;
+  }
+  .oab-item:last-child { border-bottom: none; }
+  .oab-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .oab-note {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 3px;
+    padding: 6px 10px;
+    background: #f8f6f1;
+    border-left: 3px solid var(--gold);
+    border-radius: 0 4px 4px 0;
+  }
+
+  /* ── QUICK REVISION ─────────────────────────────────── */
+  .revision-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .revision-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .rc-header {
+    background: var(--navy);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rc-icon {
+    font-size: 16px;
+  }
+  .rc-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .rc-body {
+    padding: 12px 16px;
+  }
+  .rc-body ul {
+    list-style: none;
+    padding: 0;
+  }
+  .rc-body li {
+    font-size: 12.5px;
+    line-height: 1.5;
+    padding: 4px 0;
+    border-bottom: 1px solid #f0ede6;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .rc-body li:last-child { border-bottom: none; }
+  .rc-body li::before {
+    content: '›';
+    color: var(--teal);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .highlight { color: var(--red); font-weight: 600; }
+  .gold { color: var(--gold); font-weight: 600; }
+
+  /* ── CALLOUT BOX ───────────────────────────────────── */
+  .callout {
+    background: rgba(201,168,76,0.08);
+    border: 1px solid var(--gold);
+    border-left: 4px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 20px 0;
+    font-size: 13px;
+  }
+  .callout b { color: var(--gold); }
+
+  /* ── PRINT ──────────────────────────────────────────── */
+  @media print {
+    .section-header { page-break-before: always; }
+    .mcq-card, .osce-station { page-break-inside: avoid; }
+    body { font-size: 12px; }
+    .content { padding: 20px 30px; }
+    .cover { padding: 30px 40px; }
+    .cover h1 { font-size: 36px; }
+  }
+
+  hr.divider {
+    border: none;
+    border-top: 2px solid var(--border);
+    margin: 32px 0;
+  }
+
+  .topic-banner {
+    background: linear-gradient(90deg, rgba(13,110,138,0.1) 0%, transparent 100%);
+    border-left: 4px solid var(--teal);
+    padding: 10px 16px;
+    margin-bottom: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--teal);
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     COVER
+═══════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-inner">
+    <div class="cover-tag">ENT Round Exam — Ear Chapter</div>
+    <h1>The Painful Ear</h1>
+    <h2>Complete Exam Preparation Bank</h2>
+    <div class="cover-meta">
+      <span>📋 <b>51</b> MCQs</span>
+      <span>🏥 <b>9</b> OSCE Stations</span>
+      <span>🔑 Full Answer Key</span>
+      <span>📝 Quick Revision Notes</span>
+      <span>East Port Said University · ENT Round</span>
+    </div>
+  </div>
+</div>
+
+<!-- TOC -->
+<nav class="toc">
+  <a class="toc-item" href="#section1"><span class="toc-num">1</span>MCQs</a>
+  <a class="toc-item" href="#section2"><span class="toc-num">2</span>OSCE Stations</a>
+  <a class="toc-item" href="#section3"><span class="toc-num">3</span>Answer Key</a>
+  <a class="toc-item" href="#section4"><span class="toc-num">4</span>Quick Revision</a>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 1 — MCQs
+═══════════════════════════════════════════ -->
+<div id="section1" class="section-header">
+  <div class="section-num">01</div>
+  <div class="section-text">
+    <h3>Part One</h3>
+    <h2>Multiple Choice Questions</h2>
+  </div>
+  <div class="section-badge">51 Questions · No Answers Shown</div>
+</div>
+
+<div class="content">
+
+  <div class="callout">
+    <b>Instructions:</b> Choose the single best answer for each question. Write your answer in the blank provided. Answers are in Section 3.
+  </div>
+
+  <div class="topic-banner">🦠 Otitis Externa & Related Conditions — Q1 to Q11</div>
+
+  <!-- Q1 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">1</div>
+      <div class="mcq-q">Pain is a symptom of which of the following ear conditions?</div>
+      <div class="mcq-tag">Ear Pain</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Acute otitis media</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Chronic otitis media</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Impacted wax</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Otitis media with effusion</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">2</div>
+      <div class="mcq-q">The causative organism in ear furuncle is:</div>
+      <div class="mcq-tag">Furuncle</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Proteus</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Pseudomonas</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Staph. aureus</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">E. coli</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">3</div>
+      <div class="mcq-q">Malignant otitis externa — which of the following statements is/are TRUE?</div>
+      <div class="mcq-tag">Malignant OE</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">It is a malignant tumour affecting the EAC in elderly uncontrolled diabetic patients</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">It is a potentially fatal disease</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">It is also called skull base osteomyelitis</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">All of the above are true</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">4</div>
+      <div class="mcq-q">Itching of the ear is a characteristic symptom of:</div>
+      <div class="mcq-tag">Otomycosis</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Cholesteatoma</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Acute suppurative otitis media</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Otosclerosis</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Otomycosis</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">5</div>
+      <div class="mcq-q">In malignant otitis externa, all of the following are true EXCEPT:</div>
+      <div class="mcq-tag">Malignant OE</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">It is common in old diabetic patients</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Facial nerve paralysis may occur</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">The most common organism is Pseudomonas</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">It is mainly treated surgically (first-line)</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">6</div>
+      <div class="mcq-q">Management of malignant otitis externa includes all of the following EXCEPT:</div>
+      <div class="mcq-tag">Malignant OE</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Strict control of blood sugar in diabetic patients</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">High-dose antibiotics (fluoroquinolones)</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Local debridement of necrotic tissue</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">All of the above are part of management</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">7</div>
+      <div class="mcq-q">Which of the following is NOT true regarding malignant otitis externa?</div>
+      <div class="mcq-tag">Malignant OE</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">It is a spreading osteomyelitis caused by Haemophilus influenzae</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Granulation tissue is found on the floor of the EAC</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Night ear pain is a characteristic symptom</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Prognosis is usually poor without treatment</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">8</div>
+      <div class="mcq-q">Which statement is TRUE about malignant otitis externa?</div>
+      <div class="mcq-tag">Malignant OE</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Painless otorrhoea is the characteristic feature</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">It is also called skull base osteomyelitis</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">It is caused by Streptococci</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">First-line treatment is surgical</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">9</div>
+      <div class="mcq-q">Regarding otomycosis — which of the following is correct?</div>
+      <div class="mcq-tag">Otomycosis</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Systemic antifungal treatment is always necessary</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Aspergillus and Candida are the most common responsible organisms</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Otalgia is the main complaint</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">It occurs commonly in diabetics</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">10</div>
+      <div class="mcq-q">A 64-year-old diabetic patient presents with severe otalgia unrelieved by multiple analgesics. Examination shows granulation tissue in the external auditory canal. The most likely diagnosis is:</div>
+      <div class="mcq-tag">Clinical MCQ</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Chronic suppurative otitis media</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Fungal otitis externa</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Ramsay Hunt syndrome</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Malignant otitis externa</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">11</div>
+      <div class="mcq-q">A 65-year-old woman presents with severe otalgia unrelieved by oral analgesics. She has facial paresis and granulation tissue in the left EAC. In a senile patient with uncontrolled diabetes where CT and MRI are NEGATIVE, the next best investigation is:</div>
+      <div class="mcq-tag">Clinical + Investigation</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Repeat CT scan</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">MRI with contrast</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Bone scan (technetium / gallium)</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Biopsy</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">12</div>
+      <div class="mcq-q">A 38-year-old man with type 2 diabetes returned from a holiday where he went swimming every day. He has irritation in both ears. His right ear is hot, red, acutely painful; the external meatus appears swollen but the tympanic membrane is mobile. The most likely diagnosis is:</div>
+      <div class="mcq-tag">Clinical MCQ</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Malignant otitis externa</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Furuncle in the external meatus</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Diffuse otitis externa</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Acute otitis media</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <div class="topic-banner">💊 Acute Otitis Media (AOM) — Q13 to Q22</div>
+
+  <!-- Q13 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">13</div>
+      <div class="mcq-q">The following organisms are involved in acute otitis media EXCEPT:</div>
+      <div class="mcq-tag">AOM — Microbiology</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Streptococcus pneumoniae</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Haemophilus influenzae</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Pseudomonas aeruginosa</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Moraxella catarrhalis</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">14</div>
+      <div class="mcq-q">Throbbing and severe earache is present in which stage of acute otitis media?</div>
+      <div class="mcq-tag">AOM — Stages</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Stage of salpingitis</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Stage of catarrhal otitis media</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Stage of suppurative otitis media</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Stage of tympanic membrane perforation</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">15</div>
+      <div class="mcq-q">In a patient with ASOM with a bulging drum, myringotomy is beneficial to:</div>
+      <div class="mcq-tag">AOM — Management</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Drain the middle ear</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Avoid rupture of the tympanic membrane</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Avoid complications</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">All of the above</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">16</div>
+      <div class="mcq-q">The pain in ASOM in the suppurative stage is best described as:</div>
+      <div class="mcq-tag">AOM — Symptoms</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Dull aching</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Throbbing</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Boring</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Burning</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">17</div>
+      <div class="mcq-q">The pain in ASOM is more severe at which time?</div>
+      <div class="mcq-tag">AOM — Symptoms</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Night</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Morning</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Mid-day</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">All day equally</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">18</div>
+      <div class="mcq-q">Which is a risk factor for otitis media in infants?</div>
+      <div class="mcq-tag">AOM — Risk Factors</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Bottle feeding</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Premature birth</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Being first-born</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Diarrhoea</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">19</div>
+      <div class="mcq-q">A 2-year-old boy with AOM whose pain is not relieved despite adequate antibiotic treatment — the best next step is:</div>
+      <div class="mcq-tag">AOM — Management</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Change of antibiotic</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Increase analgesic dose</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Give analgesic ear drops</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Refer for myringotomy</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">20</div>
+      <div class="mcq-q">A 4-year-old boy presents with left earache, vomiting for 1 day. Pinna is pushed downwards and forwards. A small perforation leaking pus is noted in the pars tensa. Temperature = 39.2°C. The next best step in management is:</div>
+      <div class="mcq-tag">Mastoiditis — Clinical</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Oral Amoxicillin</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Emergency mastoidectomy</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Amoxicillin + clavulanic acid</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Admission and IV antibiotics</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q21 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">21</div>
+      <div class="mcq-q">Most cases of extradural abscess of the temporal lobe:</div>
+      <div class="mcq-tag">AOM Complications</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Are asymptomatic and discovered accidentally during mastoidectomy</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Present with persistent ipsilateral temporal headache</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Present with vertigo</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Present with pulsating discharge, hearing loss and tinnitus</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q22 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">22</div>
+      <div class="mcq-q">A patient with long-standing left otorrhoea presented with persistent left temporal headache. The diagnosis may be:</div>
+      <div class="mcq-tag">CSOM Complications</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Migraine</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Mastoiditis</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Extradural abscess</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Meningitis</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <div class="topic-banner">🔀 Referred Otalgia — Q23 to Q31</div>
+
+  <!-- Q23 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">23</div>
+      <div class="mcq-q">Pain in acute tonsillitis is referred to the ear through:</div>
+      <div class="mcq-tag">Referred Otalgia</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">5th cranial nerve</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">9th cranial nerve (Jacobson's nerve)</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">10th cranial nerve (Arnold's nerve)</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">2nd & 3rd cervical nerves</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q24 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">24</div>
+      <div class="mcq-q">Pain in acute sinusitis is referred to the ear through:</div>
+      <div class="mcq-tag">Referred Otalgia</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">5th cranial nerve</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">9th cranial nerve</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">10th cranial nerve</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">2nd & 3rd cervical nerves</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q25 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">25</div>
+      <div class="mcq-q">Pain in temporomandibular joint dysfunction is referred to the ear through:</div>
+      <div class="mcq-tag">Referred Otalgia</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">5th cranial nerve (auriculotemporal branch)</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">9th cranial nerve</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">10th cranial nerve</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">2nd & 3rd cervical nerves</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q26 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">26</div>
+      <div class="mcq-q">Pain in cancer of the larynx is referred to the ear through:</div>
+      <div class="mcq-tag">Referred Otalgia</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">5th cranial nerve</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">9th cranial nerve</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">10th cranial nerve (Arnold's nerve)</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">2nd & 3rd cervical nerves</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q27 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">27</div>
+      <div class="mcq-q">Pain in salivary gland calculi is referred to the ear through:</div>
+      <div class="mcq-tag">Referred Otalgia</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">5th cranial nerve</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">9th cranial nerve</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">10th cranial nerve</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">2nd & 3rd cervical nerves</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q28 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">28</div>
+      <div class="mcq-q">Unilateral referred otalgia may be due to all of the following EXCEPT:</div>
+      <div class="mcq-tag">Referred Otalgia</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Peritonsillar abscess</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Ulcer of the oral tongue</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Allergic rhinitis</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Temporomandibular joint dysfunction</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q29 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">29</div>
+      <div class="mcq-q">A 50-year-old male presents with otalgia. The external auditory canal and tympanic membrane are both normal. All of the following might be the site of origin of his pain EXCEPT:</div>
+      <div class="mcq-tag">Referred Otalgia</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Teeth</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Tongue</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Cervical vertebrae</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Inner ear</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q30 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">30</div>
+      <div class="mcq-q">Referred otalgia after tonsillitis travels along which nerve?</div>
+      <div class="mcq-tag">Referred Otalgia</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Jacobson's nerve (branch of IX)</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Arnold's nerve (branch of X)</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Facial nerve</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Auriculotemporal nerve (branch of V3)</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q31 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">31</div>
+      <div class="mcq-q">Pain is a characteristic symptom of:</div>
+      <div class="mcq-tag">Ear Pain — DDx</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Bullous myringitis</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Chronic suppurative otitis media</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Otitis media with effusion</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Otosclerosis</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <div class="topic-banner">🦠 Herpes Zoster Oticus (Ramsay Hunt) — Q32 to Q35</div>
+
+  <!-- Q32 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">32</div>
+      <div class="mcq-q">A 70-year-old woman has weakness of the left side of her face. She has had a painful ear for 48 hours. Vesicles are seen in the left ear canal and on the ear drum. Which of the following is associated with this condition?</div>
+      <div class="mcq-tag">Herpes Zoster Oticus</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Paracusis willisii</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Furunculosis of the external auditory meatus</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Osteomyelitis of the temporal bone caused by Pseudomonas</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Reactivation of a latent viral infection in the geniculate ganglion</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q33 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">33</div>
+      <div class="mcq-q">A 30-year-old lady complains of severe otalgia and small vesicles on the concha. One day later she develops drooping of the angle of the mouth on the same side. The diagnosis is:</div>
+      <div class="mcq-tag">Herpes Zoster Oticus</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Ramsay Hunt syndrome</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Bullous myringitis</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Glomus tumour</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Acute otitis media</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q34 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">34</div>
+      <div class="mcq-q">A 45-year-old man presents with dull aching pain and tinnitus to the right ear. Examination reveals small blisters over the auricle and within the EAC. He has difficulty closing the right eye and keeping food in his mouth. The treatment of choice is:</div>
+      <div class="mcq-tag">Herpes Zoster Oticus</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Mastoidectomy</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Botulinum toxin injections</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Acyclovir and corticosteroids</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Antibiotics directed against Pseudomonas</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q35 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">35</div>
+      <div class="mcq-q">The symptom ALWAYS present in bullous myringitis is:</div>
+      <div class="mcq-tag">Bullous Myringitis</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Facial nerve paralysis</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Fever</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Ear pain</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Purulent ear discharge</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <div class="topic-banner">🏋️ Trauma — Q36 to Q45</div>
+
+  <!-- Q36 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">36</div>
+      <div class="mcq-q">In otitic barotrauma, which of the following statements is INCORRECT?</div>
+      <div class="mcq-tag">Barotrauma</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">It occurs during airplane ascent</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">It occurs during rapid airplane descent</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">It can cause rupture of the tympanic membrane</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">It occurs during diving</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q37 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">37</div>
+      <div class="mcq-q">Which of the following is NOT a feature of otitic barotrauma?</div>
+      <div class="mcq-tag">Barotrauma</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Otalgia</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Deafness</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Tinnitus</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Purulent ear discharge</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q38 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">38</div>
+      <div class="mcq-q">In traumatic rupture of the tympanic membrane, which of the following is TRUE?</div>
+      <div class="mcq-tag">Traumatic TM Rupture</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">It usually heals spontaneously within 3 months</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Local ear drops are highly indicated</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Myringoplasty is the first-line treatment</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Suction of blood clots helps healing</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q39 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">39</div>
+      <div class="mcq-q">Rupture of the tympanic membrane is suspected if during ear wash there is:</div>
+      <div class="mcq-tag">Ear Wash Complication</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Sudden pain</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Sensation of water in the throat</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Blood-tinged returning water</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">All of the above</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q40 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">40</div>
+      <div class="mcq-q">Auricular hematoma — which of the following is TRUE?</div>
+      <div class="mcq-tag">Auricular Hematoma</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">It may be complicated by otitis externa</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Cauliflower ear is one of its complications</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Evacuation of extravasated blood is not essential</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">All of the above</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q41 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">41</div>
+      <div class="mcq-q">Haematoma auris — which of the following is TRUE?</div>
+      <div class="mcq-tag">Auricular Hematoma</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">It is due to extravasation of blood in the subcutaneous tissue</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">It is treated by warming the pinna</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">It can lead to loss of cartilage support of the pinna ("cauliflower ear")</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Haemostasis, bandage and follow-up alone are sufficient</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q42 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">42</div>
+      <div class="mcq-q">The correct management of auricular hematoma is:</div>
+      <div class="mcq-tag">Auricular Hematoma</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Aspiration of blood only</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Systemic antibiotic alone</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Evacuation of blood followed by pressure bandage</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">No treatment — it resolves spontaneously</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q43 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">43</div>
+      <div class="mcq-q">Haematoma auris may be complicated by:</div>
+      <div class="mcq-tag">Auricular Hematoma</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Bleeding from the ear</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Perichondritis</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Otitis externa</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">All of the above</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q44 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">44</div>
+      <div class="mcq-q">Longitudinal temporal bone fracture — which is TRUE?</div>
+      <div class="mcq-tag">Temporal Bone Fracture</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Is less common than the transverse type</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Is usually associated with sensorineural hearing loss</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Facial nerve paralysis is a common association with this type</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">None of the above</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q45 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">45</div>
+      <div class="mcq-q">Conductive deafness in longitudinal temporal bone fracture may be due to:</div>
+      <div class="mcq-tag">Temporal Bone Fracture</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Rupture of the tympanic membrane</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Ossicular disruption</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">None of the above</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Both A and B</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <div class="topic-banner">🔬 Mixed Clinical Scenarios — Q46 to Q51</div>
+
+  <!-- Q46 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">46</div>
+      <div class="mcq-q">A patient with long-standing left otorrhoea presented with persistent left temporal headache. The most likely diagnosis in this context is:</div>
+      <div class="mcq-tag">CSOM Complications</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Migraine</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Mastoiditis</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Extradural abscess</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Meningitis</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q47 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">47</div>
+      <div class="mcq-q">Uncontrolled diabetes in an elderly patient may predispose to:</div>
+      <div class="mcq-tag">Diabetes & Ear</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Cholesteatoma</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Malignant otitis externa</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Presbyacusis</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Vestibular neuronitis</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q48 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">48</div>
+      <div class="mcq-q">A slippery foreign body in the external canal must NOT be removed by forceps because:</div>
+      <div class="mcq-tag">Foreign Body Ear</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">It may slip deeper into the external canal</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">It may injure the tympanic membrane during removal</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">It is usually difficult to grasp by this method</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">All of the above</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q49 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">49</div>
+      <div class="mcq-q">An impacted seed in the external canal is best removed by:</div>
+      <div class="mcq-tag">Foreign Body Ear</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Ear wash</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Suction</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Hook or crocodile forceps</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">None of the above</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q50 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">50</div>
+      <div class="mcq-q">A 45-year-old patient presents with severe dull pain in the right ear radiating to the pinna, ringing in the ear, and small blisters over the auricle and in the external auditory canal. The diagnosis is:</div>
+      <div class="mcq-tag">Clinical DDx</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Chronic suppurative otitis media</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Fungal otitis externa</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Ramsay Hunt syndrome</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">Malignant otitis externa</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+  <!-- Q51 -->
+  <div class="mcq-card">
+    <div class="mcq-header">
+      <div class="mcq-num">51</div>
+      <div class="mcq-q">Management of malignant otitis externa (necrotizing OE) typically involves all of the following EXCEPT:</div>
+      <div class="mcq-tag">Malignant OE — Mx</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt"><div class="mcq-letter">A</div><div class="mcq-opt-text">Monitoring the patient's ESR</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">B</div><div class="mcq-opt-text">Glucose control</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">C</div><div class="mcq-opt-text">Systemic corticosteroids</div></div>
+      <div class="mcq-opt"><div class="mcq-letter">D</div><div class="mcq-opt-text">IV fluoroquinolone therapy</div></div>
+    </div>
+    <div class="mcq-footer"><div class="answer-box">My Answer: <span class="answer-blank"></span></div></div>
+  </div>
+
+</div><!-- /content -->
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 2 — OSCE STATIONS
+═══════════════════════════════════════════ -->
+<div id="section2" class="section-header">
+  <div class="section-num">02</div>
+  <div class="section-text">
+    <h3>Part Two</h3>
+    <h2>OSCE Stations</h2>
+  </div>
+  <div class="section-badge">9 Stations · Clinical Format</div>
+</div>
+
+<div class="content">
+
+  <div class="callout">
+    <b>Instructions:</b> Read each clinical scenario carefully. Answer all tasks in the space provided. Be concise but complete — imagine you are at the OSCE station.
+  </div>
+
+  <!-- STATION 1 -->
+  <div class="osce-station">
+    <div class="osce-header">
+      <div class="osce-badge">Station 1</div>
+      <div class="osce-title">Ear Furuncle (Recurrent Furunculosis)</div>
+      <div class="osce-disease-tag">Otitis Externa</div>
+    </div>
+    <div class="osce-scenario">
+      <p>A <strong>50-year-old male</strong> presents with right earache of 2 days duration. The pain is especially severe on <em>chewing food</em> and during speech. Pressure on the tragus is painful. A small, red swelling arises from the anterior wall of the external auditory canal. He gives a history of 2 previous similar attacks in the same ear over the past 6 months.</p>
+    </div>
+    <div class="osce-tasks">
+      <div class="tasks-label">المطلوب من الطالب</div>
+      <div class="task-item"><div class="task-num">1</div><div class="task-text">What is your diagnosis?<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">2</div><div class="task-text">Why is the pain especially severe on chewing?<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">3</div><div class="task-text">Suggest one key investigation to perform in all such patients.<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">4</div><div class="task-text">Outline the treatment (medical + surgical considerations).<div class="answer-space"></div></div></div>
+    </div>
+  </div>
+
+  <!-- STATION 2 -->
+  <div class="osce-station">
+    <div class="osce-header">
+      <div class="osce-badge">Station 2</div>
+      <div class="osce-title">Malignant (Necrotizing) Otitis Externa</div>
+      <div class="osce-disease-tag">Skull Base Osteomyelitis</div>
+    </div>
+    <div class="osce-scenario">
+      <p>A <strong>67-year-old woman</strong> with uncontrolled diabetes has severe pain in the right ear for one month. She received several courses of antibiotics with no response. On otoscopy: handle of malleus (1) and granulation tissue (2) on the floor of the external auditory canal are seen.</p>
+    </div>
+    <div class="osce-tasks">
+      <div class="tasks-label">المطلوب من الطالب</div>
+      <div class="task-item"><div class="task-num">1</div><div class="task-text">What is your provisional diagnosis?<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">2</div><div class="task-text">Give two investigations you would request.<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">3</div><div class="task-text">Give two lines of treatment.<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">4</div><div class="task-text">Give two complications of this condition.<div class="answer-space"></div></div></div>
+    </div>
+  </div>
+
+  <!-- STATION 3 -->
+  <div class="osce-station">
+    <div class="osce-header">
+      <div class="osce-badge">Station 3</div>
+      <div class="osce-title">Acute Suppurative Otitis Media (ASOM)</div>
+      <div class="osce-disease-tag">AOM — Paediatric</div>
+    </div>
+    <div class="osce-scenario">
+      <p>A <strong>6-year-old child</strong> developed severe pain in both ears together with a temperature of 39°C, following an attack of the common cold. On examination, the tympanic membranes appear bulging and angry red.</p>
+    </div>
+    <div class="osce-tasks">
+      <div class="tasks-label">المطلوب من الطالب</div>
+      <div class="task-item"><div class="task-num">1</div><div class="task-text">What is your diagnosis?<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">2</div><div class="task-text">Describe the otoscopic findings in the suppurative stage.<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">3</div><div class="task-text">Outline the treatment.<div class="answer-space"></div></div></div>
+    </div>
+  </div>
+
+  <!-- STATION 4 -->
+  <div class="osce-station">
+    <div class="osce-header">
+      <div class="osce-badge">Station 4</div>
+      <div class="osce-title">Acute Mastoiditis (Complication of AOM)</div>
+      <div class="osce-disease-tag">AOM Complication</div>
+    </div>
+    <div class="osce-scenario">
+      <p>A <strong>12-year-old child</strong> had fever and left ear pain for 3 days, followed by right ear discharge and relief of earache — but fever persisted. He received no medical treatment. Ten days later, the fever elevated; there was tenderness over the mastoid. CT scan shows clouding of mastoid air cells.</p>
+    </div>
+    <div class="osce-tasks">
+      <div class="tasks-label">المطلوب من الطالب</div>
+      <div class="task-item"><div class="task-num">1</div><div class="task-text">What is your diagnosis?<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">2</div><div class="task-text">Comment on the CT findings — name two radiological findings in mastoiditis.<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">3</div><div class="task-text">Name the points of clinical tenderness in mastoiditis.<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">4</div><div class="task-text">Outline two lines of treatment.<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">5</div><div class="task-text">Name 3 complications of this condition.<div class="answer-space"></div></div></div>
+    </div>
+  </div>
+
+  <!-- STATION 5 -->
+  <div class="osce-station">
+    <div class="osce-header">
+      <div class="osce-badge">Station 5</div>
+      <div class="osce-title">Herpes Zoster Oticus (Ramsay Hunt Syndrome)</div>
+      <div class="osce-disease-tag">Viral</div>
+    </div>
+    <div class="osce-scenario">
+      <p>A <strong>60-year-old diabetic female</strong> developed severe otalgia. Two days later she developed complete facial palsy on the same side. On examination of her auricle: vesicles over the helix, antihelix, tragus, antitragus, and meatus are seen.</p>
+    </div>
+    <div class="osce-tasks">
+      <div class="tasks-label">المطلوب من الطالب</div>
+      <div class="task-item"><div class="task-num">1</div><div class="task-text">Name the labelled structures 1–5 seen in the auricle image (Helix, Antihelix, Tragus, Antitragus, Concha).<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">2</div><div class="task-text">What is your diagnosis?<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">3</div><div class="task-text">Name three electrophysiological tests of the facial nerve.<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">4</div><div class="task-text">Give three lines of treatment.<div class="answer-space"></div></div></div>
+    </div>
+  </div>
+
+  <!-- STATION 6 -->
+  <div class="osce-station">
+    <div class="osce-header">
+      <div class="osce-badge">Station 6</div>
+      <div class="osce-title">Perichondritis of the Auricle</div>
+      <div class="osce-disease-tag">Auricular</div>
+    </div>
+    <div class="osce-scenario">
+      <p>A <strong>14-year-old child</strong> presents with pain in the auricle, swelling and marked tenderness. He was stung by a wasp 2 days ago.</p>
+    </div>
+    <div class="osce-tasks">
+      <div class="tasks-label">المطلوب من الطالب</div>
+      <div class="task-item"><div class="task-num">1</div><div class="task-text">What is your provisional diagnosis?<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">2</div><div class="task-text">Give two lines of treatment (medical and surgical).<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">3</div><div class="task-text">Give one complication of this condition if left untreated.<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">4</div><div class="task-text">What is the function of the auricle?<div class="answer-space"></div></div></div>
+    </div>
+  </div>
+
+  <!-- STATION 7 -->
+  <div class="osce-station">
+    <div class="osce-header">
+      <div class="osce-badge">Station 7</div>
+      <div class="osce-title">Hematoma of the Auricle</div>
+      <div class="osce-disease-tag">Auricular Trauma</div>
+    </div>
+    <div class="osce-scenario">
+      <p>A <strong>12-year-old child</strong> won a football match at school yesterday. His auricular swelling is not tender but is tense and fluctuant.</p>
+    </div>
+    <div class="osce-tasks">
+      <div class="tasks-label">المطلوب من الطالب</div>
+      <div class="task-item"><div class="task-num">1</div><div class="task-text">What is your provisional diagnosis?<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">2</div><div class="task-text">How do you treat this condition? (3 steps)<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">3</div><div class="task-text">Give two complications if untreated.<div class="answer-space"></div></div></div>
+    </div>
+  </div>
+
+  <!-- STATION 8 -->
+  <div class="osce-station">
+    <div class="osce-header">
+      <div class="osce-badge">Station 8</div>
+      <div class="osce-title">Otitic Barotrauma</div>
+      <div class="osce-disease-tag">Barotrauma</div>
+    </div>
+    <div class="osce-scenario">
+      <p>A <strong>50-year-old man</strong> had severe ear pain and sense of fullness once on the ground after an air flight. He flew while having a cold. On otoscopy: an air-fluid level (haemotympanum) is seen behind a darkened, bulging tympanic membrane.</p>
+    </div>
+    <div class="osce-tasks">
+      <div class="tasks-label">المطلوب من الطالب</div>
+      <div class="task-item"><div class="task-num">1</div><div class="task-text">What do you see in the otoscopy photo (describe the finding)?<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">2</div><div class="task-text">What is your provisional diagnosis?<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">3</div><div class="task-text">Explain the mechanism of the patient's problem.<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">4</div><div class="task-text">Give two lines of treatment.<div class="answer-space"></div></div></div>
+    </div>
+  </div>
+
+  <!-- STATION 9 -->
+  <div class="osce-station">
+    <div class="osce-header">
+      <div class="osce-badge">Station 9</div>
+      <div class="osce-title">Referred Otalgia</div>
+      <div class="osce-disease-tag">Referred Pain</div>
+    </div>
+    <div class="osce-scenario">
+      <p>A <strong>39-year-old female</strong> has intermittent pain in the right ear for 2 weeks. She has no other associated ear symptoms and has a dental appointment next Thursday. On examination: the tympanic membrane is normal.</p>
+    </div>
+    <div class="osce-tasks">
+      <div class="tasks-label">المطلوب من الطالب</div>
+      <div class="task-item"><div class="task-num">1</div><div class="task-text">Enumerate 4 main ear symptoms.<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">2</div><div class="task-text">Comment on the ear finding — what does a normal TM in the context of otalgia suggest?<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">3</div><div class="task-text">Enumerate 5 causes of referred otalgia.<div class="answer-space"></div></div></div>
+      <div class="task-item"><div class="task-num">4</div><div class="task-text">Name 4 sensory nerves that supply the ear.<div class="answer-space"></div></div></div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 3 — ANSWER KEY
+═══════════════════════════════════════════ -->
+<div id="section3" class="section-header">
+  <div class="section-num">03</div>
+  <div class="section-text">
+    <h3>Part Three</h3>
+    <h2>Answer Key</h2>
+  </div>
+  <div class="section-badge">MCQs + OSCE Model Answers</div>
+</div>
+
+<div class="content">
+
+  <div class="topic-banner">MCQ Answers — Q1 to Q51</div>
+
+  <div class="answer-key-grid">
+    <div class="answer-key-item"><div class="ak-num">Q1</div><div class="ak-ans">A</div><div class="ak-text">Acute otitis media causes pain</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q2</div><div class="ak-ans">C</div><div class="ak-text">Staph. aureus → furuncle</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q3</div><div class="ak-ans">D</div><div class="ak-text">All true — fatal, osteomyelitis, elderly DM</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q4</div><div class="ak-ans">D</div><div class="ak-text">Otomycosis → itching</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q5</div><div class="ak-ans">D</div><div class="ak-text">Medical (not surgical) is first-line</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q6</div><div class="ak-ans">D</div><div class="ak-text">All included in management</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q7</div><div class="ak-ans">A</div><div class="ak-text">Pseudomonas, NOT H. influenzae</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q8</div><div class="ak-ans">B</div><div class="ak-text">Skull base osteomyelitis = correct name</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q9</div><div class="ak-ans">B</div><div class="ak-text">Aspergillus & Candida most common</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q10</div><div class="ak-ans">D</div><div class="ak-text">DM + granulation + severe pain = MOE</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q11</div><div class="ak-ans">C</div><div class="ak-text">Bone scan (Tc-99 or Gallium) is next</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q12</div><div class="ak-ans">C</div><div class="ak-text">Swimmer + swollen meatus = Diffuse OE</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q13</div><div class="ak-ans">C</div><div class="ak-text">Pseudomonas is NOT a common AOM organism</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q14</div><div class="ak-ans">C</div><div class="ak-text">Suppurative stage → severe throbbing pain</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q15</div><div class="ak-ans">D</div><div class="ak-text">All of the above</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q16</div><div class="ak-ans">B</div><div class="ak-text">Throbbing pain in ASOM</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q17</div><div class="ak-ans">A</div><div class="ak-text">Pain worse at night in ASOM</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q18</div><div class="ak-ans">A</div><div class="ak-text">Bottle feeding → risk factor</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q19</div><div class="ak-ans">D</div><div class="ak-text">Refer for myringotomy</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q20</div><div class="ak-ans">D</div><div class="ak-text">Admission + IV antibiotics (mastoiditis)</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q21</div><div class="ak-ans">A</div><div class="ak-text">Extradural abscess → usually asymptomatic</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q22</div><div class="ak-ans">C</div><div class="ak-text">Persistent headache + otorrhoea = extradural</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q23</div><div class="ak-ans">B</div><div class="ak-text">Tonsil → IX → Jacobson's nerve</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q24</div><div class="ak-ans">A</div><div class="ak-text">Sinusitis → V (trigeminal)</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q25</div><div class="ak-ans">A</div><div class="ak-text">TMJ → V (auriculotemporal)</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q26</div><div class="ak-ans">C</div><div class="ak-text">Larynx cancer → X (Arnold's nerve)</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q27</div><div class="ak-ans">A</div><div class="ak-text">Salivary gland → V</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q28</div><div class="ak-ans">C</div><div class="ak-text">Allergic rhinitis does NOT cause referred otalgia</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q29</div><div class="ak-ans">D</div><div class="ak-text">Inner ear pain does NOT refer outward</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q30</div><div class="ak-ans">A</div><div class="ak-text">Jacobson's nerve (IX) → tonsil → ear</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q31</div><div class="ak-ans">A</div><div class="ak-text">Bullous myringitis → always painful</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q32</div><div class="ak-ans">D</div><div class="ak-text">Geniculate ganglion reactivation of VZV</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q33</div><div class="ak-ans">A</div><div class="ak-text">Ramsay Hunt = VZV + FN palsy</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q34</div><div class="ak-ans">C</div><div class="ak-text">Acyclovir + steroids</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q35</div><div class="ak-ans">C</div><div class="ak-text">Ear pain is ALWAYS present in bullous myringitis</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q36</div><div class="ak-ans">A</div><div class="ak-text">Occurs on descent, NOT ascent</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q37</div><div class="ak-ans">D</div><div class="ak-text">Purulent discharge is NOT a feature</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q38</div><div class="ak-ans">A</div><div class="ak-text">Heals spontaneously in 3 months</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q39</div><div class="ak-ans">D</div><div class="ak-text">All of the above signal TM rupture</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q40</div><div class="ak-ans">B</div><div class="ak-text">Cauliflower ear = complication (not A/C/D)</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q41</div><div class="ak-ans">C</div><div class="ak-text">Can lead to loss of cartilage support</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q42</div><div class="ak-ans">C</div><div class="ak-text">Evacuation + pressure bandage</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q43</div><div class="ak-ans">D</div><div class="ak-text">All complications can occur</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q44</div><div class="ak-ans">C</div><div class="ak-text">FN palsy common in longitudinal fracture</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q45</div><div class="ak-ans">D</div><div class="ak-text">Both TM rupture AND ossicular disruption</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q46</div><div class="ak-ans">C</div><div class="ak-text">Extradural abscess → persistent headache</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q47</div><div class="ak-ans">B</div><div class="ak-text">DM → malignant OE</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q48</div><div class="ak-ans">D</div><div class="ak-text">All of the above dangers apply</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q49</div><div class="ak-ans">C</div><div class="ak-text">Hook/crocodile forceps for impacted seeds</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q50</div><div class="ak-ans">C</div><div class="ak-text">Blisters + FN palsy + otalgia = Ramsay Hunt</div></div>
+    <div class="answer-key-item"><div class="ak-num">Q51</div><div class="ak-ans">C</div><div class="ak-text">Corticosteroids NOT used in MOE management</div></div>
+  </div>
+
+  <hr class="divider">
+  <div class="topic-banner">OSCE Model Answers</div>
+
+  <!-- OSCE Answer 1 -->
+  <div class="osce-answer-block">
+    <div class="oab-header"><h4>Station 1 — Ear Furuncle</h4></div>
+    <div class="oab-body">
+      <div class="oab-item"><div class="oab-label">Diagnosis</div>Recurrent furunculosis of the right external auditory canal (caused by Staph. aureus)</div>
+      <div class="oab-item"><div class="oab-label">Why pain on chewing?</div>The TMJ is directly adjacent to the cartilaginous EAC — jaw movements transmit pressure onto the furuncle, intensifying pain.</div>
+      <div class="oab-item"><div class="oab-label">Key Investigation</div>Blood glucose analysis — to exclude/detect diabetes mellitus (risk factor for recurrent furunculosis)</div>
+      <div class="oab-item"><div class="oab-label">Treatment</div>
+        <b>Medical:</b> Systemic antibiotics (anti-staphylococcal) + analgesics. Local: glycerine ichthyol ointment or antibiotic cream. Control diabetes if found.<br>
+        <b>Surgical:</b> NEVER incise or excise a furuncle in the EAC (risk of perichondritis). If pointing, gentle expression only.
+        <div class="oab-note">⚠️ High-yield: Never incise EAC furuncle — risk of perichondritis and cartilage necrosis!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OSCE Answer 2 -->
+  <div class="osce-answer-block">
+    <div class="oab-header"><h4>Station 2 — Malignant Otitis Externa</h4></div>
+    <div class="oab-body">
+      <div class="oab-item"><div class="oab-label">Diagnosis</div>Malignant otitis externa (Necrotizing OE / Skull base osteomyelitis) — caused by Pseudomonas aeruginosa</div>
+      <div class="oab-item"><div class="oab-label">Investigations</div>1. Culture + sensitivity (from EAC) — confirms Pseudomonas. 2. HbA1c. 3. CT scan of temporal bone. 4. Bone scan (Gallium/Tc-99). 5. Biopsy to exclude tumour.</div>
+      <div class="oab-item"><div class="oab-label">Treatment</div>
+        <b>Medical:</b> Hospitalisation + control of diabetes + IV fluoroquinolones (Ciprofloxacin) + local EAC cleaning by suction + local antibiotic drops.<br>
+        <b>Surgical:</b> Debridement if needed.
+      </div>
+      <div class="oab-item"><div class="oab-label">Complications</div>Facial palsy (CN VII) · Lower cranial nerve palsies (IX, X, XI, XII) · Parotid swelling · Trigeminal facial pain</div>
+    </div>
+  </div>
+
+  <!-- OSCE Answer 3 -->
+  <div class="osce-answer-block">
+    <div class="oab-header"><h4>Station 3 — Acute Suppurative Otitis Media</h4></div>
+    <div class="oab-body">
+      <div class="oab-item"><div class="oab-label">Diagnosis</div>Acute suppurative otitis media (ASOM) — bilateral</div>
+      <div class="oab-item"><div class="oab-label">Otoscopic Findings (Suppurative Stage)</div>Bulging, angry red drum · Loss of luster · Loss of landmarks (handle of malleus, cone of light) · Bulging (not yet perforated)</div>
+      <div class="oab-item"><div class="oab-label">Treatment</div>
+        1. Analgesics + antipyretics<br>
+        2. Antibiotics (Amoxicillin 1st line, or Amoxicillin/Clavulanate)<br>
+        3. Nasal decongestants (to open ET)<br>
+        4. Myringotomy — if bulging drum + no improvement after 48h, or complications
+      </div>
+    </div>
+  </div>
+
+  <!-- OSCE Answer 4 -->
+  <div class="osce-answer-block">
+    <div class="oab-header"><h4>Station 4 — Acute Mastoiditis</h4></div>
+    <div class="oab-body">
+      <div class="oab-item"><div class="oab-label">Diagnosis</div>Left acute mastoiditis (complication of AOM)</div>
+      <div class="oab-item"><div class="oab-label">CT Findings</div>1. Clouding/opacity of mastoid air cells · 2. Erosion of mastoid air cell septa</div>
+      <div class="oab-item"><div class="oab-label">Clinical Tenderness</div>Cymba conchae (Mc Ewen's triangle) · Mastoid tip</div>
+      <div class="oab-item"><div class="oab-label">Treatment</div>
+        <b>Medical:</b> Hospitalisation + IV antibiotics + analgesics + local drainage (myringotomy)<br>
+        <b>Surgical:</b> Cortical mastoidectomy if no response to medical treatment after 48h, or if complications develop
+      </div>
+      <div class="oab-item"><div class="oab-label">Complications</div>Lateral sinus thrombosis · Labyrinthitis · Facial palsy · Petrositis · Meningitis · Brain abscess</div>
+    </div>
+  </div>
+
+  <!-- OSCE Answer 5 -->
+  <div class="osce-answer-block">
+    <div class="oab-header"><h4>Station 5 — Ramsay Hunt Syndrome</h4></div>
+    <div class="oab-body">
+      <div class="oab-item"><div class="oab-label">Diagnosis</div>Herpes zoster oticus (Ramsay Hunt Syndrome) — reactivation of VZV at the geniculate ganglion</div>
+      <div class="oab-item"><div class="oab-label">Electrophysiological Tests of Facial Nerve</div>1. NET — Nerve Excitability Test (after 3 days) · 2. ENoG — Electroneurography (after 3 days) · 3. EMG — Electromyography (after 3 weeks)</div>
+      <div class="oab-item"><div class="oab-label">Treatment</div>
+        1. Antivirals — Acyclovir 800mg × 5 times/day × 10 days<br>
+        2. Corticosteroids — Prednisolone 10mg × 3 weeks<br>
+        3. Analgesics (Paracetamol)<br>
+        4. Eye care (artificial tears, eye patch at night)<br>
+        5. Antibiotics to prevent secondary infection
+        <div class="oab-note">⚠️ The triad: severe otalgia + facial palsy + vesicles in the EAC = Ramsay Hunt</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OSCE Answer 6 -->
+  <div class="osce-answer-block">
+    <div class="oab-header"><h4>Station 6 — Perichondritis</h4></div>
+    <div class="oab-body">
+      <div class="oab-item"><div class="oab-label">Diagnosis</div>Perichondritis of the auricle (after insect sting)</div>
+      <div class="oab-item"><div class="oab-label">Treatment</div>
+        <b>Medical:</b> Systemic + local antibiotics · Analgesics<br>
+        <b>Surgical:</b> Incision + drainage with removal of necrotic cartilage if pus/abscess forms · Tight bandage applied
+      </div>
+      <div class="oab-item"><div class="oab-label">Complication</div>Necrosis of cartilage → fibrosis → cauliflower ear</div>
+      <div class="oab-item"><div class="oab-label">Function of Auricle</div>Collection and localisation of sound</div>
+    </div>
+  </div>
+
+  <!-- OSCE Answer 7 -->
+  <div class="osce-answer-block">
+    <div class="oab-header"><h4>Station 7 — Hematoma of Auricle</h4></div>
+    <div class="oab-body">
+      <div class="oab-item"><div class="oab-label">Diagnosis</div>Hematoma of the auricle ("Boxer's ear") — blood extravasation between perichondrium and cartilage</div>
+      <div class="oab-item"><div class="oab-label">Treatment</div>
+        1. Drainage (incision + evacuation of blood)<br>
+        2. Application of tight/pressure bandage<br>
+        3. Systemic antibiotics to prevent secondary infection
+      </div>
+      <div class="oab-item"><div class="oab-label">Complications (if untreated)</div>1. Perichondritis · 2. Cauliflower ear (cartilage necrosis + fibrosis)</div>
+    </div>
+  </div>
+
+  <!-- OSCE Answer 8 -->
+  <div class="osce-answer-block">
+    <div class="oab-header"><h4>Station 8 — Otitic Barotrauma</h4></div>
+    <div class="oab-body">
+      <div class="oab-item"><div class="oab-label">Otoscopy Finding</div>Air-fluid level (haemotympanum) — fluid/blood visible as a dark meniscus behind the tympanic membrane</div>
+      <div class="oab-item"><div class="oab-label">Diagnosis</div>Otitic barotrauma (aviation barotrauma)</div>
+      <div class="oab-item"><div class="oab-label">Mechanism</div>Eustachian tube blocked by cold → during rapid aircraft descent → atmospheric pressure ↑ while ME pressure ↓ → negative pressure in ME → effusion (± haemotympanum). Severe cases → TM rupture.</div>
+      <div class="oab-item"><div class="oab-label">Treatment</div>
+        <b>Mild (SOM):</b> 1. Nasal decongestants · 2. Valsalva manoeuvre (to open ET)<br>
+        <b>Moderate:</b> 3. Myringotomy + drainage<br>
+        <b>Severe (ruptured drum):</b> 4. Myringoplasty
+        <div class="oab-note">⚠️ Flying with a cold is the classic risk factor — blocked ET = barotrauma</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OSCE Answer 9 -->
+  <div class="osce-answer-block">
+    <div class="oab-header"><h4>Station 9 — Referred Otalgia</h4></div>
+    <div class="oab-body">
+      <div class="oab-item"><div class="oab-label">4 Main Ear Symptoms</div>1. Hearing loss · 2. Vertigo · 3. Tinnitus · 4. Discharge (otorrhoea)</div>
+      <div class="oab-item"><div class="oab-label">Normal TM + Otalgia = ?</div>Referred otalgia — pain originates outside the ear and is referred to the ear via shared sensory nerve supply</div>
+      <div class="oab-item"><div class="oab-label">5 Causes of Referred Otalgia</div>
+        1. Dental disease (TMJ dysfunction, dental caries) — CN V<br>
+        2. Tonsillitis / peritonsillar abscess — CN IX<br>
+        3. Cancer larynx / pyriform fossa — CN X (Arnold's)<br>
+        4. Maxillary sinusitis — CN V<br>
+        5. Cervical spine disease — C2/C3
+      </div>
+      <div class="oab-item"><div class="oab-label">4 Sensory Nerves Supplying the Ear</div>
+        1. CN V (Trigeminal) — auriculotemporal nerve → upper 2/3 of EAC<br>
+        2. CN VII (Facial) — posterior EAC (concha)<br>
+        3. CN IX (Glossopharyngeal) — Jacobson's nerve → ME mucosa<br>
+        4. CN X (Vagus) — Arnold's nerve → posterior 1/2 of EAC
+        <div class="oab-note">Memory: <b>5-7-9-10</b> — all supply the ear, explaining why many head/neck diseases cause referred ear pain</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 4 — QUICK REVISION NOTES
+═══════════════════════════════════════════ -->
+<div id="section4" class="section-header">
+  <div class="section-num">04</div>
+  <div class="section-text">
+    <h3>Part Four</h3>
+    <h2>Quick Revision Notes</h2>
+  </div>
+  <div class="section-badge">High-Yield Bullets</div>
+</div>
+
+<div class="content">
+
+  <div class="revision-grid">
+
+    <div class="revision-card">
+      <div class="rc-header"><span class="rc-icon">🦠</span><div class="rc-title">Ear Furuncle</div></div>
+      <div class="rc-body"><ul>
+        <li>Organism: <span class="highlight">Staph. aureus</span> (localized OE)</li>
+        <li>Site: outer 1/3 of EAC (hair follicle)</li>
+        <li>Pain ↑ on jaw movement (TMJ adjacent)</li>
+        <li>Tragus pressure → pain</li>
+        <li>Rx: ABs + analgesics + glycerine ichthyol</li>
+        <li><span class="highlight">NEVER incise</span> → perichondritis risk</li>
+        <li>Always check blood glucose</li>
+      </ul></div>
+    </div>
+
+    <div class="revision-card">
+      <div class="rc-header"><span class="rc-icon">💀</span><div class="rc-title">Malignant Otitis Externa</div></div>
+      <div class="rc-body"><ul>
+        <li>= Skull base osteomyelitis</li>
+        <li>Organism: <span class="highlight">Pseudomonas aeruginosa</span></li>
+        <li>Patient: elderly + <span class="highlight">uncontrolled DM</span></li>
+        <li>Granulation on floor of EAC = pathognomonic</li>
+        <li>Severe nocturnal otalgia — unresponsive to analgesics</li>
+        <li>Complication: <span class="highlight">Facial nerve palsy</span></li>
+        <li>Rx: IV Ciprofloxacin + debridement + DM control</li>
+        <li>CT negative → <span class="highlight">Bone scan next</span></li>
+      </ul></div>
+    </div>
+
+    <div class="revision-card">
+      <div class="rc-header"><span class="rc-icon">👂</span><div class="rc-title">ASOM — Key Points</div></div>
+      <div class="rc-body"><ul>
+        <li>Most common organisms: Strep. pneumo, H. flu, Moraxella</li>
+        <li><span class="highlight">NOT Pseudomonas</span> in AOM</li>
+        <li>Suppurative stage: bulging red drum + <span class="highlight">throbbing pain</span> at night</li>
+        <li>Pain relief → perforation → discharge</li>
+        <li>Rx: ABs + analgesics + nasal decongestants</li>
+        <li>Myringotomy: if bulging drum, no response after 48h</li>
+        <li>Risk factor in infants: <span class="highlight">bottle feeding</span></li>
+      </ul></div>
+    </div>
+
+    <div class="revision-card">
+      <div class="rc-header"><span class="rc-icon">🔀</span><div class="rc-title">Referred Otalgia — Nerve Map</div></div>
+      <div class="rc-body"><ul>
+        <li><span class="gold">CN V</span> → TMJ, sinusitis, salivary gland, dental</li>
+        <li><span class="gold">CN VII</span> → Ramsay Hunt syndrome</li>
+        <li><span class="gold">CN IX</span> (Jacobson) → tonsillitis, pharynx</li>
+        <li><span class="gold">CN X</span> (Arnold) → larynx cancer, oesophagus</li>
+        <li><span class="gold">C2/C3</span> → cervical spine disease</li>
+        <li>Normal ear + otalgia = always think REFERRED</li>
+        <li>Referred otalgia ≠ allergic rhinitis</li>
+      </ul></div>
+    </div>
+
+    <div class="revision-card">
+      <div class="rc-header"><span class="rc-icon">🌡️</span><div class="rc-title">Ramsay Hunt Syndrome</div></div>
+      <div class="rc-body"><ul>
+        <li>= Herpes Zoster Oticus</li>
+        <li>Triad: <span class="highlight">Otalgia + FN palsy + Vesicles in EAC</span></li>
+        <li>Virus: VZV — reactivated at <span class="highlight">geniculate ganglion</span></li>
+        <li>May cause SNHL + vertigo</li>
+        <li>Rx: <span class="highlight">Acyclovir + Prednisolone</span></li>
+        <li>Electrophysiology: NET (3d) → ENoG (3d) → EMG (3w)</li>
+      </ul></div>
+    </div>
+
+    <div class="revision-card">
+      <div class="rc-header"><span class="rc-icon">✈️</span><div class="rc-title">Otitic Barotrauma</div></div>
+      <div class="rc-body"><ul>
+        <li>Occurs during <span class="highlight">DESCENT</span> (NOT ascent)</li>
+        <li>Also: diving, blast injury</li>
+        <li>Risk: flying with a cold (blocked ET)</li>
+        <li>Mechanism: Atmospheric P ↑, ME P ↓ → negative ME pressure → effusion / haemotympanum</li>
+        <li>Otoscopy: <span class="highlight">air-fluid level</span> (classic sign)</li>
+        <li>Rx mild: nasal decongestants + Valsalva</li>
+        <li>Rx moderate: myringotomy</li>
+        <li>No purulent discharge (differentiates from AOM)</li>
+      </ul></div>
+    </div>
+
+    <div class="revision-card">
+      <div class="rc-header"><span class="rc-icon">🥊</span><div class="rc-title">Auricular Hematoma</div></div>
+      <div class="rc-body"><ul>
+        <li>"Boxer's ear" — blunt trauma</li>
+        <li>Blood between perichondrium and cartilage</li>
+        <li>Non-tender, fluctuant swelling</li>
+        <li>Rx: <span class="highlight">Incision + evacuation + pressure bandage + ABs</span></li>
+        <li>Complication: <span class="highlight">Cauliflower ear</span> (perichondritis → fibrosis)</li>
+        <li>Never just aspirate without bandage — reaccumulates</li>
+      </ul></div>
+    </div>
+
+    <div class="revision-card">
+      <div class="rc-header"><span class="rc-icon">🦟</span><div class="rc-title">Perichondritis</div></div>
+      <div class="rc-body"><ul>
+        <li>Inflammation of auricle cartilage/perichondrium</li>
+        <li>Causes: insect sting, trauma, burns, ear piercing</li>
+        <li>Painful, red, swollen pinna</li>
+        <li>Rx: systemic + local ABs + analgesics</li>
+        <li>Surgical if abscess: drain + remove necrotic cartilage</li>
+        <li>Complication: <span class="highlight">Cauliflower ear</span></li>
+        <li>Lobule NOT involved (no cartilage in lobule)</li>
+      </ul></div>
+    </div>
+
+    <div class="revision-card">
+      <div class="rc-header"><span class="rc-icon">🦠</span><div class="rc-title">Otomycosis</div></div>
+      <div class="rc-body"><ul>
+        <li>Main symptom: <span class="highlight">ITCHING</span> (not pain)</li>
+        <li>Organisms: <span class="highlight">Aspergillus niger (black), Candida</span></li>
+        <li>Otoscopy: white mass with black dots</li>
+        <li>Rx: local cleaning + antifungal drops (Nystatin) × 3 weeks</li>
+        <li>Systemic treatment NOT needed</li>
+        <li>Common in swimmers and after antibiotic ear drops</li>
+      </ul></div>
+    </div>
+
+    <div class="revision-card">
+      <div class="rc-header"><span class="rc-icon">📋</span><div class="rc-title">Bullous Myringitis</div></div>
+      <div class="rc-body"><ul>
+        <li>Viral TM inflammation with blebs (bullae)</li>
+        <li><span class="highlight">Ear pain ALWAYS present</span></li>
+        <li>Haemorrhagic blebs on TM and EAC</li>
+        <li>No facial palsy (differentiates from Ramsay Hunt)</li>
+        <li>Rx: analgesics + antiviral if needed</li>
+      </ul></div>
+    </div>
+
+    <div class="revision-card">
+      <div class="rc-header"><span class="rc-icon">💥</span><div class="rc-title">Traumatic TM Rupture</div></div>
+      <div class="rc-body"><ul>
+        <li>Causes: slap, blast, ear wash, barotrauma</li>
+        <li>Otoscopy: right ear → handle of malleus on LEFT side of image</li>
+        <li><span class="highlight">Heals spontaneously in 3 months</span></li>
+        <li>Rx: systemic ABs + nasal decongestants (open ET)</li>
+        <li>No ear drops (may enter ME)</li>
+        <li>Keep ear dry — avoid wetting</li>
+        <li>Myringoplasty if fails to heal after 3–6 months</li>
+      </ul></div>
+    </div>
+
+    <div class="revision-card">
+      <div class="rc-header"><span class="rc-icon">⚡</span><div class="rc-title">High-Yield Exam Facts</div></div>
+      <div class="rc-body"><ul>
+        <li>Pain + DM + granulation = <span class="highlight">MOE until proven otherwise</span></li>
+        <li>Pain + vesicles + FN palsy = <span class="highlight">Ramsay Hunt</span></li>
+        <li>Itching + black spots + swimmer = <span class="highlight">Otomycosis</span></li>
+        <li>Pain + flight + cold history = <span class="highlight">Barotrauma</span></li>
+        <li>Pain + normal TM = <span class="highlight">Referred otalgia</span></li>
+        <li>Blunt trauma + non-tender swelling = <span class="highlight">Haematoma</span></li>
+        <li>Insect sting + red tender pinna = <span class="highlight">Perichondritis</span></li>
+      </ul></div>
+    </div>
+
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <b>📌 Final Note:</b> The most commonly tested topics in this chapter are Malignant Otitis Externa, Ramsay Hunt Syndrome, Referred Otalgia nerve pathways, and ASOM stages. Focus on clinical scenarios — the diagnosis is usually hidden in the history. Good luck! 🎯
+  </div>
+
+</div><!-- /content -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // تفعيل اختيار الإجابات في أسئلة الاختياري (MCQs)
+    const mcqCards = document.querySelectorAll('.mcq-card');
+    
+    mcqCards.forEach(card => {
+      const options = card.querySelectorAll('.mcq-opt');
+      const answerBlank = card.querySelector('.answer-blank');
+      
+      options.forEach(option => {
+        option.addEventListener('click', function() {
+          // إزالة التحديد من جميع الخيارات لنفس السؤال
+          options.forEach(opt => {
+            opt.style.borderColor = '#e8e4d9';
+            opt.style.background = 'var(--cream)';
+          });
+          
+          // تمييز الخيار المحدد
+          this.style.borderColor = 'var(--teal)';
+          this.style.background = 'rgba(13,110,138,0.04)';
+          
+          // كتابة الحرف المختار في الأسفل
+          const letter = this.querySelector('.mcq-letter').innerText;
+          if (answerBlank) {
+            answerBlank.innerText = letter;
+            answerBlank.style.color = 'var(--teal)';
+            answerBlank.style.fontWeight = 'bold';
+          }
+        });
+      });
+    });
+
+    // تفعيل الكتابة في مساحات الإجابة الخاصة بأسئلة (OSCE)
+    const answerSpaces = document.querySelectorAll('.answer-space');
+    answerSpaces.forEach(space => {
+      space.setAttribute('contenteditable', 'true');
+      space.style.outline = 'none';
+      space.style.padding = '8px';
+      space.style.overflowY = 'auto';
+      space.style.cursor = 'text';
+    });
+  });
+</script>
+</body>
+</html>
